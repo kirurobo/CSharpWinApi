@@ -78,6 +78,13 @@ namespace Kirurobo
         public static readonly uint WM_WINDOWPOSCHANGING = 0x046;
         public static readonly uint WM_DROPFILES = 0x233;
 
+        public static readonly uint ULW_COLORKEY = 0x00000001;
+        public static readonly uint ULW_ALPHA = 0x00000002;
+        public static readonly uint ULW_OPAQUE = 0x00000004;
+        
+        public static readonly uint LWA_COLORKEY = 0x00000001;
+        public static readonly uint LWA_ALPHA = 0x00000002;
+
         public delegate int EnumWindowsDelegate(IntPtr hWnd, long lParam);
 
 
@@ -92,6 +99,22 @@ namespace Kirurobo
                 this.top = top;
                 this.right = right;
                 this.bottom = bottom;
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct COLORREF
+        {
+            public uint color;
+
+            public COLORREF(uint color)
+            {
+                this.color = color;
+            }
+
+            public COLORREF(byte r, byte g, byte b)
+            {
+                this.color = (uint)(b * 0x10000 + g * 0x100 + r);
             }
         }
 
@@ -157,6 +180,12 @@ namespace Kirurobo
 
         [DllImport("user32.dll")]
         public static extern bool PostMessage(IntPtr hWnd, uint msg, long wParam, IntPtr lParam);
+
+        [DllImport("user32.dll")]
+        public static extern bool UpdateLayeredWindow(IntPtr hWnd, IntPtr hdcDst, IntPtr pptDst, IntPtr psize, IntPtr hdcSrc, IntPtr pptSrc, COLORREF crKey, IntPtr pblend, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, COLORREF crKey, byte bAlpha, uint dwFlags);
 
         #endregion
 
