@@ -2,6 +2,8 @@
 
 C# から Windows API や Desktop Window Manager API を呼び出すためのラッパーです。
 
+[UniWinApi](https://github.com/kirurobo/UniWinApi/) のサブモジュールとして用意しましたが、Unityに限らずC#で利用できる部分として独立させています。
+
 
 ## License
 
