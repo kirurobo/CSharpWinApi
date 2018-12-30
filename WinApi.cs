@@ -176,6 +176,9 @@ namespace Kirurobo
         public static extern IntPtr GetActiveWindow();
 
         [DllImport("user32.dll")]
+        public static extern IntPtr GetParent(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
         public static extern IntPtr GetAncestor(IntPtr hWnd, uint gaFlags);
 
         [DllImport("user32.dll")]
