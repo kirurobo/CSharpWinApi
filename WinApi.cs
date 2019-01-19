@@ -85,7 +85,8 @@ namespace Kirurobo
         public static readonly uint LWA_COLORKEY = 0x00000001;
         public static readonly uint LWA_ALPHA = 0x00000002;
 
-        public delegate int EnumWindowsDelegate(IntPtr hWnd, long lParam);
+        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+        public delegate bool EnumWindowsDelegate(IntPtr hWnd, IntPtr lParam);
 
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
@@ -118,8 +119,8 @@ namespace Kirurobo
             }
         }
 
-        [DllImport("user32.dll")]
-        public static extern int EnumWindows(EnumWindowsDelegate lpEnumFunc, long lParam);
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool EnumWindows(EnumWindowsDelegate lpEnumFunc, IntPtr lParam);
 
         [DllImport("user32.dll")]
         public static extern bool IsWindow(IntPtr hWnd);
@@ -134,7 +135,7 @@ namespace Kirurobo
         public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
 
         [DllImport("user32.dll")]
-        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out int lpdwProcessId);
+        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out IntPtr lpdwProcessId);
 
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string lpszClass, string lpszTitle);
