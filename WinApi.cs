@@ -7,6 +7,8 @@
  * Author: Ru--en, http://twitter.com/ru__en
  */
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -85,9 +87,21 @@ namespace Kirurobo
         public static readonly uint LWA_COLORKEY = 0x00000001;
         public static readonly uint LWA_ALPHA = 0x00000002;
 
-        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
-        public delegate bool EnumWindowsDelegate(IntPtr hWnd, IntPtr lParam);
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        public delegate bool EnumWindowsDelegate(IntPtr hWnd, ref ArrayList list);
+        private static bool EnumWindowsCallback(IntPtr hWnd, ref ArrayList list)
+        {
+            list.Add(hWnd);
+            return true;
+        }
 
+        public static ArrayList GetWindows()
+        {
+            ArrayList hwndList = new ArrayList();
+            EnumWindowsDelegate callback = EnumWindowsCallback;
+            EnumWindows(callback, ref hwndList);
+            return hwndList;
+        }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct RECT
@@ -120,7 +134,8 @@ namespace Kirurobo
         }
 
         [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool EnumWindows(EnumWindowsDelegate lpEnumFunc, IntPtr lParam);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnumWindows(EnumWindowsDelegate lpEnumFunc, ref ArrayList lParam);
 
         [DllImport("user32.dll")]
         public static extern bool IsWindow(IntPtr hWnd);
@@ -128,11 +143,11 @@ namespace Kirurobo
         [DllImport("user32.dll")]
         public static extern int IsWindowVisible(IntPtr hWnd);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetWindowText(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpString, int nMaxCount);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        public static extern int GetClassName(IntPtr hWnd, StringBuilder lpClassName, int nMaxCount);
+        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetClassName(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpClassName, int nMaxCount);
 
         [DllImport("user32.dll")]
         public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out IntPtr lpdwProcessId);
@@ -327,7 +342,7 @@ namespace Kirurobo
         [DllImport("kernel32.dll")]
         public static extern long GetLastError();
 
-        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
+        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr HookProc(int code, IntPtr wParam, ref MSG lParam);
 
         #endregion
