@@ -88,20 +88,7 @@ namespace Kirurobo
         public static readonly uint LWA_ALPHA = 0x00000002;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate bool EnumWindowsDelegate(IntPtr hWnd, ref ArrayList list);
-        private static bool EnumWindowsCallback(IntPtr hWnd, ref ArrayList list)
-        {
-            list.Add(hWnd);
-            return true;
-        }
-
-        public static ArrayList GetWindows()
-        {
-            ArrayList hwndList = new ArrayList();
-            EnumWindowsDelegate callback = EnumWindowsCallback;
-            EnumWindows(callback, ref hwndList);
-            return hwndList;
-        }
+        public delegate bool EnumWindowsDelegate(IntPtr hWnd, IntPtr lParam);
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct RECT
@@ -135,7 +122,7 @@ namespace Kirurobo
 
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool EnumWindows(EnumWindowsDelegate lpEnumFunc, ref ArrayList lParam);
+        public static extern bool EnumWindows(EnumWindowsDelegate lpEnumFunc, IntPtr lParam);
 
         [DllImport("user32.dll")]
         public static extern bool IsWindow(IntPtr hWnd);
@@ -150,7 +137,7 @@ namespace Kirurobo
         public static extern int GetClassName(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpClassName, int nMaxCount);
 
         [DllImport("user32.dll")]
-        public static extern uint GetWindowThreadProcessId(IntPtr hWnd, out IntPtr lpdwProcessId);
+        public static extern long GetWindowThreadProcessId(IntPtr hWnd, out ulong lpdwProcessId);
 
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string lpszClass, string lpszTitle);
