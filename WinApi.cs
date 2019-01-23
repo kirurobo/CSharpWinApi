@@ -7,8 +7,6 @@
  * Author: Ru--en, http://twitter.com/ru__en
  */
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -128,7 +126,7 @@ namespace Kirurobo
         public static extern bool IsWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
-        public static extern int IsWindowVisible(IntPtr hWnd);
+        public static extern bool IsWindowVisible(IntPtr hWnd);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
         public static extern int GetWindowText(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpString, int nMaxCount);
@@ -137,16 +135,16 @@ namespace Kirurobo
         public static extern int GetClassName(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpClassName, int nMaxCount);
 
         [DllImport("user32.dll")]
-        public static extern long GetWindowThreadProcessId(IntPtr hWnd, out ulong lpdwProcessId);
+        public static extern int GetWindowThreadProcessId(IntPtr hWnd, out IntPtr lpdwProcessId);
 
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string lpszClass, string lpszTitle);
 
         [DllImport("user32.dll")]
-        public static extern long GetWindowRect(IntPtr hWnd, out RECT rect);
+        public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
 
         [DllImport("user32.dll")]
-        public static extern long GetClientRect(IntPtr hWnd, out RECT rect);
+        public static extern bool GetClientRect(IntPtr hWnd, out RECT rect);
 
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
@@ -247,7 +245,7 @@ namespace Kirurobo
         public static extern void DragAcceptFiles(IntPtr hWnd, bool bAccept);
 
         [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
-        public static extern uint DragQueryFile(IntPtr hDrop, uint iFIle, [MarshalAs(UnmanagedType.LPWStr)]StringBuilder lpszFile, uint cch);
+        public static extern uint DragQueryFile(IntPtr hDrop, uint iFile, [MarshalAs(UnmanagedType.LPWStr)]StringBuilder lpszFile, uint cch);
 
         [DllImport("shell32.dll")]
         public static extern void DragFinish(IntPtr hDrop);
