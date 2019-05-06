@@ -216,6 +216,25 @@ namespace Kirurobo
         public struct POINT
         {
             public int x, y;
+
+            public override string ToString()
+            {
+                return "(" + x + "," + y + ")";
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct CURSORINFO
+        {
+            public int cbSize;
+            public int flags;       // 0:Hidden, 1:Showing, 2:Suppressed(Window8-)
+            public IntPtr hCursor;
+            public POINT ptScreenPos;
+
+            public override string ToString()
+            {
+                return string.Format("Flags:{0}, HCursor:{1}, Point:{2}", flags, hCursor, ptScreenPos.ToString());
+            }
         }
 
         [DllImport("user32.dll")]
@@ -223,6 +242,9 @@ namespace Kirurobo
 
         [DllImport("user32.dll")]
         public static extern bool SetCursorPos(int x, int y);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool GetCursorInfo(ref CURSORINFO pcursorinfo);
 
         [DllImport("user32.dll")]
         public static extern uint mouse_event(ulong dwFlags, int dx, int dy, ulong dwData, IntPtr dwExtraInfo);
