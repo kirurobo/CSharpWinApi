@@ -42,7 +42,7 @@ namespace Kirurobo
         /// MARGINS structure defined in uxtheme.h
         /// </summary>
         [StructLayout(LayoutKind.Sequential)]
-        public class MARGINS
+        public struct MARGINS
         {
             public int cxLeftWidth;
             public int cxRightWidth;
@@ -61,7 +61,7 @@ namespace Kirurobo
 
         #region APIs defined in dwmapi.h
         [StructLayout(LayoutKind.Sequential)]
-        public class DWM_BLURBEHIND
+        public struct DWM_BLURBEHIND
         {
             public uint dwFlags;
             [MarshalAs(UnmanagedType.Bool)] public bool fEnable;
@@ -75,7 +75,7 @@ namespace Kirurobo
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public class DWM_THUMBNAIL_PROPERTIES
+        public struct DWM_THUMBNAIL_PROPERTIES
         {
             public uint dwFlags;
             public RECT rcDestination;
