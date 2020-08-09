@@ -21,7 +21,7 @@ namespace Kirurobo
         /// <summary>
         /// RECT structure defined in windef.h
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 16)]
         public struct RECT
         {
             public int left;
@@ -41,7 +41,7 @@ namespace Kirurobo
         /// <summary>
         /// MARGINS structure defined in uxtheme.h
         /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 16)]
         public struct MARGINS
         {
             public int cxLeftWidth;
@@ -120,40 +120,28 @@ namespace Kirurobo
             DWMNCRP_ENABLED = 2,
             DWMNCRP_LAST = 3,
         }
-
+        
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern void DwmEnableBlurBehindWindow(IntPtr hWnd, DWM_BLURBEHIND pBlurBehind);
-
+        
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern bool DwmIsCompositionEnabled();
-
+        
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern void DwmEnableComposition(bool bEnable);
-
-        [DllImport("dwmapi.dll", PreserveSig = false)]
-        public static extern void DwmGetWindowAttribute(IntPtr hWnd, DWMWINDOWATTRIBUTE dwAttribute, out bool pvAttribute, int cbAttribute);
-
-        [DllImport("dwmapi.dll", PreserveSig = false)]
-        public static extern void DwmGetWindowAttribute(IntPtr hWnd, DWMWINDOWATTRIBUTE dwAttribute, out DWMNCRENDERINGPOLICY pvAttribute, int cbAttribute);
-
-        [DllImport("dwmapi.dll", PreserveSig = false)]
-        public static extern void DwmSetWindowAttribute(IntPtr hWnd, DWMWINDOWATTRIBUTE dwAttribute, bool pvAttribute, int cbAttribute);
-
-        [DllImport("dwmapi.dll", PreserveSig = false)]
-        public static extern void DwmSetWindowAttribute(IntPtr hWnd, DWMWINDOWATTRIBUTE dwAttribute, DWMNCRENDERINGPOLICY pvAttribute, int cbAttribute);
-
+        
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern void DwmGetColorizationColor(
             out int pcrColorization,
             [MarshalAs(UnmanagedType.Bool)]out bool pfOpaqueBlend
         );
-
+        
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern IntPtr DwmRegisterThumbnail(IntPtr dest, IntPtr source);
-
+        
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern void DwmUnregisterThumbnail(IntPtr hThumbnail);
-
+        
         [DllImport("dwmapi.dll", PreserveSig = false)]
         public static extern void DwmUpdateThumbnailProperties(IntPtr hThumbnail, DWM_THUMBNAIL_PROPERTIES props);
 
@@ -164,7 +152,7 @@ namespace Kirurobo
         /// <param name="pMargins"></param>
         /// <returns></returns>
         [DllImport("dwmapi.dll", PreserveSig = false)]
-        public static extern void DwmExtendFrameIntoClientArea(IntPtr hWnd, MARGINS pMargins);
+        public static extern void DwmExtendFrameIntoClientArea(IntPtr hWnd, ref MARGINS pMargins);
 
         #endregion
 
@@ -177,7 +165,7 @@ namespace Kirurobo
         public static void DwmExtendIntoClientAll(IntPtr hWnd)
         {
             MARGINS margins = new MARGINS(-1, -1, -1, -1);
-            DwmExtendFrameIntoClientArea(hWnd, margins);
+            DwmExtendFrameIntoClientArea(hWnd, ref margins);
         }
         #endregion
     }
