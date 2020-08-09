@@ -86,7 +86,7 @@ namespace Kirurobo
         public static readonly uint LWA_ALPHA = 0x00000002;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate bool EnumWindowsDelegate(IntPtr hWnd, IntPtr lParam);
+        public delegate bool EnumWindowsDelegate(IntPtr hWnd, long lParam);
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
         public struct RECT
@@ -122,20 +122,24 @@ namespace Kirurobo
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool EnumWindows(EnumWindowsDelegate lpEnumFunc, IntPtr lParam);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnumChildWindows(IntPtr hWnd, EnumWindowsDelegate lpEnumFunc, IntPtr lParam);
+
         [DllImport("user32.dll")]
         public static extern bool IsWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         public static extern bool IsWindowVisible(IntPtr hWnd);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("user32.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int GetWindowText(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpString, int nMaxCount);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("user32.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int GetClassName(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpClassName, int nMaxCount);
 
         [DllImport("user32.dll")]
-        public static extern int GetWindowThreadProcessId(IntPtr hWnd, out IntPtr lpdwProcessId);
+        public static extern int GetWindowThreadProcessId(IntPtr hWnd, out long lpdwProcessId);
 
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string lpszClass, string lpszTitle);
