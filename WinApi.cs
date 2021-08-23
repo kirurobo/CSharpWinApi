@@ -145,6 +145,15 @@ namespace Kirurobo
         public static extern IntPtr FindWindow(string lpszClass, string lpszTitle);
 
         [DllImport("user32.dll")]
+        public static extern IntPtr FindWindow(IntPtr lpszClass, string lpszTitle);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr FindWindow(string lpszClass, IntPtr lpszTitle);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetParent(IntPtr hWnd, IntPtr hWndNewParent);
+
+        [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
 
         [DllImport("user32.dll")]
