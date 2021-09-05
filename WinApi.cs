@@ -77,6 +77,11 @@ namespace Kirurobo
         public static readonly uint WM_NCDESTROY = 0x082;
         public static readonly uint WM_WINDOWPOSCHANGING = 0x046;
         public static readonly uint WM_DROPFILES = 0x233;
+        public static readonly uint WM_COPYDATA = 0x04A;
+        public static readonly uint WM_COPYGLOBALDATA = 0x049;
+
+        public static readonly uint MSGFLT_ADD = 1;
+        public static readonly uint MSGFLT_REMOVE = 2;
 
         public static readonly uint ULW_COLORKEY = 0x00000001;
         public static readonly uint ULW_ALPHA = 0x00000002;
@@ -206,6 +211,9 @@ namespace Kirurobo
 
         [DllImport("user32.dll")]
         public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, COLORREF crKey, byte bAlpha, uint dwFlags);
+
+        [DllImport("user32")]
+        public static extern bool ChangeWindowMessageFilter(uint msg, uint dwFlag);
 
         #endregion
 
