@@ -77,6 +77,17 @@ namespace Kirurobo
         public static readonly uint WM_NCDESTROY = 0x082;
         public static readonly uint WM_WINDOWPOSCHANGING = 0x046;
         public static readonly uint WM_DROPFILES = 0x233;
+        public static readonly uint WM_COPYDATA = 0x04A;
+        public static readonly uint WM_COPYGLOBALDATA = 0x049;
+
+        public static readonly uint MSGFLT_ALLOW = 1;
+        public static readonly uint MSGFLT_DISALLOW = 2;
+        public static readonly uint MSGFLT_RESET = 0;
+        
+        public static readonly uint MSGFLTINFO_NONE = 0;
+        public static readonly uint MSGFLTINFO_ALLOWED_HIGHER = 3;
+        public static readonly uint MSGFLTINFO_ALREADYALLOWED_FORWND = 1;
+        public static readonly uint MSGFLTINFO_ALREADYDISALLOWED_FORWND = 2;
 
         public static readonly uint ULW_COLORKEY = 0x00000001;
         public static readonly uint ULW_ALPHA = 0x00000002;
@@ -118,6 +129,24 @@ namespace Kirurobo
             }
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct CHANGEFILTERSTRUCT
+        {
+            public int cbSize;
+            public uint extStatus;
+
+            public CHANGEFILTERSTRUCT(uint msgFltInfo)
+            {
+                this.extStatus = msgFltInfo;
+                this.cbSize = sizeof(int) + sizeof(uint);
+            }
+
+            public override string ToString()
+            {
+                return string.Format("ExtStatus:{0}", extStatus);
+            }
+        }
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool EnumWindows(EnumWindowsDelegate lpEnumFunc, IntPtr lParam);
@@ -143,6 +172,15 @@ namespace Kirurobo
 
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string lpszClass, string lpszTitle);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr FindWindow(IntPtr lpszClass, string lpszTitle);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr FindWindow(string lpszClass, IntPtr lpszTitle);
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetParent(IntPtr hWnd, IntPtr hWndNewParent);
 
         [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
@@ -197,6 +235,12 @@ namespace Kirurobo
 
         [DllImport("user32.dll")]
         public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, COLORREF crKey, byte bAlpha, uint dwFlags);
+
+        [DllImport("user32.dll")]
+        public static extern bool ChangeWindowMessageFilter(uint msg, uint dwFlag);
+
+        [DllImport("user32.dll")]
+        public static extern bool ChangeWindowMessageFilterEx(IntPtr hWnd, uint msg, uint action, out CHANGEFILTERSTRUCT pChangeFilterStruct);
 
         #endregion
 
