@@ -80,8 +80,14 @@ namespace Kirurobo
         public static readonly uint WM_COPYDATA = 0x04A;
         public static readonly uint WM_COPYGLOBALDATA = 0x049;
 
-        public static readonly uint MSGFLT_ADD = 1;
-        public static readonly uint MSGFLT_REMOVE = 2;
+        public static readonly uint MSGFLT_ALLOW = 1;
+        public static readonly uint MSGFLT_DISALLOW = 2;
+        public static readonly uint MSGFLT_RESET = 0;
+        
+        public static readonly uint MSGFLTINFO_NONE = 0;
+        public static readonly uint MSGFLTINFO_ALLOWED_HIGHER = 3;
+        public static readonly uint MSGFLTINFO_ALREADYALLOWED_FORWND = 1;
+        public static readonly uint MSGFLTINFO_ALREADYDISALLOWED_FORWND = 2;
 
         public static readonly uint ULW_COLORKEY = 0x00000001;
         public static readonly uint ULW_ALPHA = 0x00000002;
@@ -120,6 +126,24 @@ namespace Kirurobo
             public COLORREF(byte r, byte g, byte b)
             {
                 this.color = (uint)(b * 0x10000 + g * 0x100 + r);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        public struct CHANGEFILTERSTRUCT
+        {
+            public int cbSize;
+            public uint extStatus;
+
+            public CHANGEFILTERSTRUCT(uint msgFltInfo)
+            {
+                this.extStatus = msgFltInfo;
+                this.cbSize = sizeof(int) + sizeof(uint);
+            }
+
+            public override string ToString()
+            {
+                return string.Format("ExtStatus:{0}", extStatus);
             }
         }
 
@@ -212,8 +236,11 @@ namespace Kirurobo
         [DllImport("user32.dll")]
         public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, COLORREF crKey, byte bAlpha, uint dwFlags);
 
-        [DllImport("user32")]
+        [DllImport("user32.dll")]
         public static extern bool ChangeWindowMessageFilter(uint msg, uint dwFlag);
+
+        [DllImport("user32.dll")]
+        public static extern bool ChangeWindowMessageFilterEx(IntPtr hWnd, uint msg, uint action, out CHANGEFILTERSTRUCT pChangeFilterStruct);
 
         #endregion
 
