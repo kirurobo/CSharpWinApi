@@ -37,25 +37,25 @@ namespace Kirurobo
         public static readonly uint SWP_NOSENDCHANGING = 0x400;
         public static readonly uint SWP_ASYNCWINDOWPOS = 0x4000;
 
-        public static readonly long WS_BORDER = 0x00800000L;
-        public static readonly long WS_VISIBLE = 0x10000000L;
-        public static readonly long WS_OVERLAPPED = 0x00000000L;
-        public static readonly long WS_CAPTION = 0x00C00000L;
-        public static readonly long WS_SYSMENU = 0x00080000L;
-        public static readonly long WS_THICKFRAME = 0x00040000L;
-        public static readonly long WS_ICONIC = 0x20000000L;
-        public static readonly long WS_MINIMIZE = 0x20000000L;
-        public static readonly long WS_MAXIMIZE = 0x01000000L;
-        public static readonly long WS_MINIMIZEBOX = 0x00020000L;
-        public static readonly long WS_MAXIMIZEBOX = 0x00010000L;
-        public static readonly long WS_POPUP = 0x80000000L;
-        public static readonly long WS_OVERLAPPEDWINDOW = 0x00CF0000L;
+        public static readonly ulong WS_BORDER = 0x00800000L;
+        public static readonly ulong WS_VISIBLE = 0x10000000L;
+        public static readonly ulong WS_OVERLAPPED = 0x00000000L;
+        public static readonly ulong WS_CAPTION = 0x00C00000L;
+        public static readonly ulong WS_SYSMENU = 0x00080000L;
+        public static readonly ulong WS_THICKFRAME = 0x00040000L;
+        public static readonly ulong WS_ICONIC = 0x20000000L;
+        public static readonly ulong WS_MINIMIZE = 0x20000000L;
+        public static readonly ulong WS_MAXIMIZE = 0x01000000L;
+        public static readonly ulong WS_MINIMIZEBOX = 0x00020000L;
+        public static readonly ulong WS_MAXIMIZEBOX = 0x00010000L;
+        public static readonly ulong WS_POPUP = 0x80000000L;
+        public static readonly ulong WS_OVERLAPPEDWINDOW = 0x00CF0000L;
 
-        public static readonly long WS_EX_TRANSPARENT = 0x00000020L;
-        public static readonly long WS_EX_LAYERED = 0x00080000L;
-        public static readonly long WS_EX_TOPMOST = 0x00000008L;
-        public static readonly long WS_EX_OVERLAPPEDWINDOW = 0x00000300L;
-        public static readonly long WS_EX_ACCEPTFILES = 0x00000010L;
+        public static readonly ulong WS_EX_TRANSPARENT = 0x00000020L;
+        public static readonly ulong WS_EX_LAYERED = 0x00080000L;
+        public static readonly ulong WS_EX_TOPMOST = 0x00000008L;
+        public static readonly ulong WS_EX_OVERLAPPEDWINDOW = 0x00000300L;
+        public static readonly ulong WS_EX_ACCEPTFILES = 0x00000010L;
 
         public static readonly IntPtr HWND_TOP = new IntPtr(0);
         public static readonly IntPtr HWND_BOTTOM = new IntPtr(1);
@@ -97,9 +97,10 @@ namespace Kirurobo
         public static readonly uint LWA_ALPHA = 0x00000002;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        public delegate bool EnumWindowsDelegate(IntPtr hWnd, long lParam);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public delegate bool EnumWindowsDelegate(IntPtr hWnd, ulong lParam);
 
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct RECT
         {
             public int left, top, right, bottom;
@@ -156,9 +157,11 @@ namespace Kirurobo
         public static extern bool EnumChildWindows(IntPtr hWnd, EnumWindowsDelegate lpEnumFunc, IntPtr lParam);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool IsWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool IsWindowVisible(IntPtr hWnd);
 
         [DllImport("user32.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
@@ -167,8 +170,8 @@ namespace Kirurobo
         [DllImport("user32.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
         public static extern int GetClassName(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpClassName, int nMaxCount);
 
-        [DllImport("user32.dll")]
-        public static extern int GetWindowThreadProcessId(IntPtr hWnd, out long lpdwProcessId);
+        [DllImport("user32.dll", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int GetWindowThreadProcessId(IntPtr hWnd, out ulong lpdwProcessId);
 
         [DllImport("user32.dll")]
         public static extern IntPtr FindWindow(string lpszClass, string lpszTitle);
@@ -183,31 +186,37 @@ namespace Kirurobo
         public static extern IntPtr SetParent(IntPtr hWnd, IntPtr hWndNewParent);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetWindowRect(IntPtr hWnd, out RECT rect);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetClientRect(IntPtr hWnd, out RECT rect);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         [DllImport("user32.dll")]
-        public static extern bool EnableWindow(IntPtr hWnd, bool bEnable);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool EnableWindow(IntPtr hWnd, [MarshalAs(UnmanagedType.U1)] bool bEnable);
 
         [DllImport("user32.dll")]
         public static extern IntPtr SetFocus(IntPtr hWnd);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool IsIconic(IntPtr hWnd);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool IsZoomed(IntPtr hWnd);
 
         [DllImport("user32.dll")]
-        public static extern long SetWindowLong(IntPtr hWnd, int nIndex, long value);
+        public static extern ulong SetWindowLong(IntPtr hWnd, int nIndex, ulong value);
 
         [DllImport("user32.dll")]
-        public static extern long GetWindowLong(IntPtr hWnd, int nIndex);
+        public static extern ulong GetWindowLong(IntPtr hWnd, int nIndex);
 
         [DllImport("user32.dll", EntryPoint = "SetWindowLongPtr")]
         public static extern IntPtr SetWindowLongPtr(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
@@ -216,6 +225,7 @@ namespace Kirurobo
         public static extern int SetWindowLongPtr32(IntPtr hWnd, int nIndex, int dwNewPtr);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, int x, int y, int cx, int cy, uint uFlags);
 
         [DllImport("user32.dll")]
@@ -228,18 +238,23 @@ namespace Kirurobo
         public static extern IntPtr GetAncestor(IntPtr hWnd, uint gaFlags);
 
         [DllImport("user32.dll")]
-        public static extern bool PostMessage(IntPtr hWnd, uint msg, long wParam, IntPtr lParam);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool PostMessage(IntPtr hWnd, uint msg, ulong wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool UpdateLayeredWindow(IntPtr hWnd, IntPtr hdcDst, IntPtr pptDst, IntPtr psize, IntPtr hdcSrc, IntPtr pptSrc, COLORREF crKey, IntPtr pblend, uint dwFlags);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetLayeredWindowAttributes(IntPtr hWnd, COLORREF crKey, byte bAlpha, uint dwFlags);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool ChangeWindowMessageFilter(uint msg, uint dwFlag);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool ChangeWindowMessageFilterEx(IntPtr hWnd, uint msg, uint action, out CHANGEFILTERSTRUCT pChangeFilterStruct);
 
         #endregion
@@ -260,7 +275,7 @@ namespace Kirurobo
         public static readonly ulong XBUTTON1 = 0x0001;
         public static readonly ulong XBUTTON2 = 0x0002;
 
-        [StructLayout(LayoutKind.Sequential, Pack = 2)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct POINT
         {
             public int x, y;
@@ -271,7 +286,7 @@ namespace Kirurobo
             }
         }
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct CURSORINFO
         {
             public int cbSize;
@@ -286,12 +301,15 @@ namespace Kirurobo
         }
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetCursorPos(out POINT point);
 
         [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool SetCursorPos(int x, int y);
 
         [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetCursorInfo(ref CURSORINFO pcursorinfo);
 
         [DllImport("user32.dll")]
@@ -362,16 +380,16 @@ namespace Kirurobo
         public static readonly int WH_SHELL = 10;
         public static readonly int WH_SYSMSGFILTER = 6;
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct CWPSTRUCT
         {
-            public long lParam;
-            public long wParam;
+            public ulong lParam;
+            public ulong wParam;
             public uint message;
             public IntPtr hwnd;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct MSG
         {
             public IntPtr hwnd;
@@ -392,13 +410,14 @@ namespace Kirurobo
         public static extern IntPtr SetWindowsHookEx(int idHook, HookProc lpfn, IntPtr hmod, uint dwThreadId);
 
         [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
         [DllImport("user32.dll")]
         public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, ref MSG lParam);
 
         [DllImport("kernel32.dll")]
-        public static extern long GetLastError();
+        public static extern ulong GetLastError();
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         public delegate IntPtr HookProc(int code, IntPtr wParam, ref MSG lParam);
@@ -407,7 +426,7 @@ namespace Kirurobo
 
         #region Common controll
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 1)]
         public class OpenFileName
         {
             public int structSize = 0;
@@ -475,6 +494,7 @@ namespace Kirurobo
         }
 
         [DllImport("Comdlg32.dll", SetLastError = true, ThrowOnUnmappableChar = true, CharSet = CharSet.Auto)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool GetOpenFileName([In, Out] OpenFileName lpofn);
 
         #endregion

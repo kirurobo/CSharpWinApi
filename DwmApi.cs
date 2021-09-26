@@ -21,7 +21,7 @@ namespace Kirurobo
         /// <summary>
         /// RECT structure defined in windef.h
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 16)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 16)]
         public struct RECT
         {
             public int left;
@@ -41,7 +41,7 @@ namespace Kirurobo
         /// <summary>
         /// MARGINS structure defined in uxtheme.h
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 4, Size = 16)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 16)]
         public struct MARGINS
         {
             public int cxLeftWidth;
@@ -60,7 +60,7 @@ namespace Kirurobo
         #endregion
 
         #region APIs defined in dwmapi.h
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct DWM_BLURBEHIND
         {
             public uint dwFlags;
@@ -74,7 +74,7 @@ namespace Kirurobo
             public const uint DWM_BB_TRANSITIONONMAXIMIZED = 0x00000004;
         }
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct DWM_THUMBNAIL_PROPERTIES
         {
             public uint dwFlags;
@@ -125,6 +125,7 @@ namespace Kirurobo
         public static extern void DwmEnableBlurBehindWindow(IntPtr hWnd, DWM_BLURBEHIND pBlurBehind);
         
         [DllImport("dwmapi.dll", PreserveSig = false)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool DwmIsCompositionEnabled();
         
         [DllImport("dwmapi.dll", PreserveSig = false)]
