@@ -130,7 +130,7 @@ namespace Kirurobo
             }
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 4)]
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct CHANGEFILTERSTRUCT
         {
             public int cbSize;
@@ -139,7 +139,7 @@ namespace Kirurobo
             public CHANGEFILTERSTRUCT(uint msgFltInfo)
             {
                 this.extStatus = msgFltInfo;
-                this.cbSize = sizeof(int) + sizeof(uint);
+                this.cbSize = Marshal.SizeOf(typeof(CHANGEFILTERSTRUCT));
             }
 
             public override string ToString()
@@ -479,6 +479,7 @@ namespace Kirurobo
             public static readonly int OFN_READONLY = 0x00000001;
             public static readonly int OFN_SHAREAWARE = 0x00004000;
             public static readonly int OFN_SHOWHELP = 0x00000010;
+
             public OpenFileName()
             {
                 this.structSize = Marshal.SizeOf(this);
