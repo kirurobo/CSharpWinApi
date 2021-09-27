@@ -98,7 +98,7 @@ namespace Kirurobo
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public delegate bool EnumWindowsDelegate(IntPtr hWnd, ulong lParam);
+        public delegate bool EnumWindowsDelegate(IntPtr hWnd, IntPtr lParam);
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct RECT
@@ -389,7 +389,7 @@ namespace Kirurobo
             public IntPtr hwnd;
         }
 
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        [StructLayout(LayoutKind.Sequential)]
         public struct MSG
         {
             public IntPtr hwnd;
@@ -426,7 +426,7 @@ namespace Kirurobo
 
         #region Common controll
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto, Pack = 1)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
         public class OpenFileName
         {
             public int structSize = 0;
@@ -479,7 +479,6 @@ namespace Kirurobo
             public static readonly int OFN_READONLY = 0x00000001;
             public static readonly int OFN_SHAREAWARE = 0x00004000;
             public static readonly int OFN_SHOWHELP = 0x00000010;
-
             public OpenFileName()
             {
                 this.structSize = Marshal.SizeOf(this);
