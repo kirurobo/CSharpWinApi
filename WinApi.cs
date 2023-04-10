@@ -96,7 +96,7 @@ namespace Kirurobo
         public static readonly uint LWA_COLORKEY = 0x00000001;
         public static readonly uint LWA_ALPHA = 0x00000002;
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public delegate bool EnumWindowsDelegate(IntPtr hWnd, IntPtr lParam);
 
@@ -164,13 +164,13 @@ namespace Kirurobo
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool IsWindowVisible(IntPtr hWnd);
 
-        [DllImport("user32.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("user32.dll", CharSet = CharSet.Ansi)]
         public static extern int GetWindowText(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpString, int nMaxCount);
 
-        [DllImport("user32.dll", CharSet = CharSet.Ansi, CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("user32.dll", CharSet = CharSet.Ansi)]
         public static extern int GetClassName(IntPtr hWnd, [MarshalAs(UnmanagedType.LPStr)]StringBuilder lpClassName, int nMaxCount);
 
-        [DllImport("user32.dll", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("user32.dll")]
         public static extern int GetWindowThreadProcessId(IntPtr hWnd, out ulong lpdwProcessId);
 
         [DllImport("user32.dll")]
@@ -419,7 +419,7 @@ namespace Kirurobo
         [DllImport("kernel32.dll")]
         public static extern ulong GetLastError();
 
-        [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+        [UnmanagedFunctionPointer(CallingConvention.Winapi)]
         public delegate IntPtr HookProc(int code, IntPtr wParam, ref MSG lParam);
 
         #endregion
